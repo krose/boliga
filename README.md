@@ -3,9 +3,9 @@ boliga.
 
 It is rather simple to use. You only need to do the following to scrape
 the actual sales prices for an area that you define on the
-(boliga)[www.boliga.dk] homepage. You only need to do the following:
+[boliga](www.boliga.dk) homepage. You only need to do the following:
 
--   Go to quick search page on (boliga.dk/salg)[www.boliga.dk/salg]
+-   Go to quick search page on [boliga.dk/salg](www.boliga.dk/salg)
 -   Make an appropiate search
 -   Copy the url into the function boliga\_webscrape\_sold.
 
