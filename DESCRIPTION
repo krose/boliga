@@ -1,0 +1,18 @@
+Package: boliga
+Type: Package
+Title: Webscrape Boliga
+Version: 0.1
+Date: 2015-08-01
+Author: Kenneth Rose
+Maintainer: Kenneth Rose <kennethrose82@gmail.com>
+Description: This package contains a few helper functions to webscrape boliga.
+License: MIT
+LazyData: TRUE
+Import:
+  magrittr,
+  rvest,
+  httr
+  dplyr,
+  stringr,
+  lubridate
+
