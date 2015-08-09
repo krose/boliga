@@ -18,9 +18,12 @@ need to do the following:
 Clap your hands when the data is returned.
 
 
-```{r eksempel}
+```{r eksempel, message = FALSE, warning = FALSE}
 
 library(boliga)
+library(ggplot2)
+library(ggmap)
+library(dplyr)
 
 # The url is from boliga.dk/salg -> 
 # Hurtigsøgning:boligtype(fritdishuse), hurigsøgning:postnummer(4500) and then press "søg"
@@ -39,7 +42,7 @@ boliger <- boliga_webscrape_sold(url_address = paste0("http://www.boliga.dk/salg
 I just bought a summer house in Nykøbing Sj. so let's see how the distribution of prices are now
 compared to the price I payed for the house.
 
-```{r kvmplot}
+```{r kvmplot, message = FALSE, warning = FALSE}
 
 hist(boliger$pris_kvm, 
      xlab = "kvm pris", 
@@ -47,7 +50,37 @@ hist(boliger$pris_kvm,
      breaks = 50, 
      main = "Histogram af kvm priser")
 abline(v = 535000 / 126)
+abline(v = 735000 / 126)
 
 ```
 
 Phew... That's not to bad!
+
+
+But what if my area is clusted with low square meter prices? Let's use the ggmap package to the lat/lon from the address.
+
+```{r klint, message = FALSE, warning = FALSE}
+
+# first, lets filter out address' with prices to far away from my summer house
+boliger <- 
+  boliger %>% filter(pris_kvm > 5000, pris_kvm < 9000)
+
+# Second, clean the address
+boliger$vej <- boliga_clean_address(boliger$vej)
+boliger$vej <- paste0(boliger$vej, ", Denmark")
+
+# Get the lon and lat from google
+# THIS WILL TAKE A WHILE
+latlon <- geocode(location = boliger$vej)
+boliger <- cbind(boliger, latlon)
+
+# Get the map and plot it
+mymap <- get_map(location = c(lon = 11.58465, lat = 55.95457), 
+                 source = "google",
+                 color = "bw", 
+                 zoom = 12)
+ggmap(mymap) + geom_point(aes(x = lon, y = lat, size = pris_kvm, col = type), data = boliger)
+
+```
+
+It looks like Klint isn't the most expensive area, but still not bad.

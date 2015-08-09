@@ -1,5 +1,8 @@
 
 
+# CHANGES TO v0.1 #
 
+ * Add boliga_clean_address to take care of the badly formatted street numbers and postal codes.
+ * A better README with examples of ggmap plots
 
  * Initial commit
