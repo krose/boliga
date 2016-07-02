@@ -2,7 +2,9 @@
 title: "Webscrape Boliga"
 author: "Kenneth Rose"
 date: "1. aug. 2015"
-output: md_document
+output: 
+  html_document:
+    keep_md: true
 ---
 
 This package has a few helper functions to webscrape the content of boliga.
