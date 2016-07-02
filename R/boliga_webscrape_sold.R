@@ -52,10 +52,10 @@ boliga_webscrape_sold <- function(url_address, random_pause = TRUE){
   boliga_table$pris <- stringr::str_replace_all(boliga_table$koebesum, "[[:punct:]]", "") %>% as.numeric()
 
   # Find fire tal efterfulgt af et mellemrum og behold resten af linjen efter mellemrummet.
-  boliga_table$post_by <- stringr::str_extract(string = vej, pattern = '((([0-9]{4})+[" "])+(.*))')
+  boliga_table$post_by <- stringr::str_extract(string = boliga_table$vej, pattern = '((([0-9]{4})+[" "])+(.*))')
 
   # Fjern post_by fra vej.
-  boliga_table$vej <- stringr::str_replace(string = vej, pattern = boliga_table$vej, replacement = "")
+  boliga_table$vej <- stringr::str_replace(string = boliga_table$vej, pattern = boliga_table$post_by, replacement = "")
   boliga_table$pris_kvm <- stringr::str_replace_all(boliga_table$kvm_pris, "[[:punct:]]", "") %>% as.numeric()
   boliga_table$dato <- lubridate::dmy(stringr::str_sub(boliga_table$dato_type, start = 1L, end = 10))
   boliga_table$bygget <- as.integer(boliga_table$bygget)
