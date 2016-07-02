@@ -34,7 +34,7 @@ library(dplyr)
 boliger <- boliga_webscrape_sold(url_address = paste0("http://www.boliga.dk/salg/resultater?so=1&",
                                                       "sort=omregnings_dato-d&maxsaledate=today&",
                                                       "type=Fritidshus&iPostnr=4500&",
-                                                      "gade=&minsaledate=2015"))
+                                                      "gade=&minsaledate=2016"))
 
 # boliger <- webscrape_boliga_sold(url_address = "http://www.boliga.dk/salg/resultater?so=1&type=Fritidshus&kom=&fraPostnr=&tilPostnr=&gade=&min=&max=&byggetMin=&byggetMax=&minRooms=&maxRooms=&minSize=&maxSize=&minsaledate=2014&maxsaledate=today&kode=")
 
@@ -63,26 +63,15 @@ But what if my area is clusted with low square meter prices? Let's use the ggmap
 
 ```{r klint, message = FALSE, warning = FALSE}
 
-# first, lets filter out address' with prices to far away from my summer house
-boliger <- 
-  boliger %>% filter(pris_kvm > 5000, pris_kvm < 9000)
-
 # Second, clean the address
-boliger$vej <- boliga_clean_address(boliger$vej)
-boliger$vej <- paste0(boliger$vej, ", Denmark")
+boliger$adresse <- paste(boliger$vej, boliger$post_by)
+boliger$adresse <- paste0(boliger$adresse, ", Denmark")
 
 # Get the lon and lat from google
 # THIS WILL TAKE A WHILE
-latlon <- geocode(location = boliger$vej)
+latlon <- geocode(location = boliger$adresse)
 boliger <- cbind(boliger, latlon)
 
-# Get the map and plot it
-mymap <- get_map(location = c(lon = 11.58465, lat = 55.95457), 
-                 source = "google",
-                 color = "bw", 
-                 zoom = 12)
-ggmap(mymap) + geom_point(aes(x = lon, y = lat, size = pris_kvm, col = type), data = boliger)
 
 ```
 
-It looks like Klint isn't the most expensive area, but still not bad.
