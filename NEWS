@@ -6,3 +6,11 @@
  * A better README with examples of ggmap plots
 
  * Initial commit
+ 
+# CHANGES TO v0.2.1
+
+ * Updated the functions for the new html layout at boliga.
+ 
+ * The call to rvest::html is replaced with xml2::read_html.
+ 
+ * DESCRIPTION is changed so xml2 is added to Imports.

@@ -12,9 +12,12 @@ boliga_webscrape_sold <- function(url_address, random_pause = TRUE){
 
   # Parse the base url to get hostname and path
   base_url <- httr::parse_url(url_address)
+  
+  bol_base <- paste0("http://", base_url$hostname,"/", base_url$path)
 
   # Get table and url
-  table_and_url <- boliga_get_table_and_url(url_address = url_address)
+  table_and_url <- boliga_get_table_and_url(url_address = url_address, 
+                                            boliga_base_url = bol_base)
 
   # Get the table from the page
   boliga_table <- table_and_url[[1]]
@@ -30,7 +33,8 @@ boliga_webscrape_sold <- function(url_address, random_pause = TRUE){
     next_boliga_url <- paste0("http://", base_url$hostname,"/", base_url$path, next_url)
 
     # Get the next urls table and the next_urls next_url
-    temp_table_and_url <- boliga_get_table_and_url(next_boliga_url)
+    temp_table_and_url <- boliga_get_table_and_url(url_address = next_boliga_url, 
+                                                   boliga_base_url = bol_base)
 
     # Row bind the boliga_table and the temp_table
     boliga_table <- rbind(boliga_table, temp_table_and_url[[1]])
