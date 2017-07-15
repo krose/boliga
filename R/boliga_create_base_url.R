@@ -31,20 +31,20 @@ boliga_create_base_url <- function(min_sale_date = NULL,
     base_url <- paste0(base_url, sort_by)
   }
   
-  if(!is.null(min_sale_date)){
+  if(!is.null(min_sale_date) | class(max_sale_date)[1] == "Date"){
     min_sale_date <- paste0("&minsaledate=", min_sale_date)
     
     base_url <- paste0(base_url, min_sale_date)
   } else {
-    stop("min_sale_date cannot be null.")
+    stop("min_sale_date cannot be null and needs to be of class Date.")
   }
   
-  if(!is.null(max_sale_date)){
+  if(!is.null(max_sale_date) | class(max_sale_date)[1] == "Date"){
     max_sale_date <- paste0("&maxsaledate=", max_sale_date)
     
     base_url <- paste0(base_url, max_sale_date)
   } else {
-    stop("max_sale_date cannot be null.")
+    stop("max_sale_date cannot be null and needs to be of class Date.")
   }
   
   if(!is.null(type)){
