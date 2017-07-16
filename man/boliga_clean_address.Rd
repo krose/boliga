@@ -16,4 +16,3 @@ This is a helper function to take the base adress, which concatenate
 the house number and postal code, and return a new and improved adress
 seperating the house number and postal code.
 }
-

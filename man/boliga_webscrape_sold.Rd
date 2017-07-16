@@ -16,4 +16,3 @@ boliga_webscrape_sold(url_address, random_pause = TRUE)
 The function takes the search results from the base url
 and iterates until there's no "next" page.
 }
-
