@@ -44,7 +44,7 @@ boliga_webscrape_sold <- function(url_address, random_pause = TRUE){
 
     # Pause function a bit if TRUE
     if(random_pause){
-      Sys.sleep(time = rpois(1, 2))
+      Sys.sleep(time = rgamma(n = 1, shape = 3, scale = 0.3))
     }
   }
 
