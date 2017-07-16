@@ -5,13 +5,14 @@
 \title{This function retuns a list with the search results
 from a specific url}
 \usage{
-boliga_get_table_and_url(url_address)
+boliga_get_table_and_url(url_address, boliga_base_url)
 }
 \arguments{
 \item{url_address}{The url you wan't to start}
+
+\item{boliga_base_url}{The base url for the loop.}
 }
 \description{
 This function retuns a list with the search results
 from a specific url
 }
-
