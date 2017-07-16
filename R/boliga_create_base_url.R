@@ -7,6 +7,8 @@
 #' @param type type fritidshus, ... ... .. 
 #' @param post_no Post number.
 #' 
+#' @export
+#' 
 #' @examples 
 #' 
 #' library(boliga)
@@ -18,7 +20,7 @@
 #'                        
 boliga_create_base_url <- function(min_sale_date = NULL,
                                    max_sale_date = Sys.Date(),
-                                   type = NULL,
+                                   type = c("Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom"),
                                    post_no = NULL){
   
   
@@ -49,6 +51,13 @@ boliga_create_base_url <- function(min_sale_date = NULL,
   
   if(!is.null(type)){
     type <- paste0("&type=", type)
+    
+    if(length(type) > 1){
+      stop("Type can only be of length one.")
+    }
+    test_type <- !type %in% c("Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom")
+    
+    
     
     base_url <- paste0(base_url, type)
   } else {
