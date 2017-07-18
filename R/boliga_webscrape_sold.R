@@ -4,16 +4,26 @@
 #' The function takes the search results from the base url
 #' and iterates until there's no "next" page.
 #'
-#' @param url_address The url you wan't to start
-#' @param pause the function with rnorm(1, 1, 0.2) if TRUE, when webscrapping.
+#' @param min_sale_date Sale date from.
+#' @param max_sale_date Sale date to.
+#' @param type Type.
+#' @param postal_code Postal code.
 #' @export
 #' @importFrom magrittr %>%
-boliga_webscrape_sold <- function(url_address, random_pause = TRUE){
+boliga_webscrape_sold <- function(min_sale_date, max_sale_date, type, postal_code){
 
-  # Parse the base url to get hostname and path
-  base_url <- httr::parse_url(url_address)
+  url_address <- boliga_create_base_url(min_sale_date = min_sale_date, 
+                                        max_sale_date = max_sale_date, 
+                                        type = type, 
+                                        postal_code = postal_code)
   
-  bol_base <- paste0("http://", base_url$hostname,"/", base_url$path)
+  if(!is.null(url_address)){
+    # Parse the base url to get hostname and path
+    base_url <- httr::parse_url(url_address)
+    
+    bol_base <- paste0("http://", base_url$hostname,"/", base_url$path)
+  }
+  
 
   # Get table and url
   table_and_url <- boliga_get_table_and_url(url_address = url_address, 
@@ -42,10 +52,7 @@ boliga_webscrape_sold <- function(url_address, random_pause = TRUE){
     # def next url
     next_url <- temp_table_and_url[[2]]
 
-    # Pause function a bit if TRUE
-    if(random_pause){
-      Sys.sleep(time = rgamma(n = 1, shape = 3, scale = 0.3))
-    }
+    Sys.sleep(time = rgamma(n = 1, shape = 3, scale = 0.3))
   }
 
   # rename variables

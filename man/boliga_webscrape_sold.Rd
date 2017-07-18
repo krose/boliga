@@ -5,12 +5,16 @@
 \title{This is the primary function to webscrape boliga
 for the actual sale prices}
 \usage{
-boliga_webscrape_sold(url_address, random_pause = TRUE)
+boliga_webscrape_sold(min_sale_date, max_sale_date, type, postal_code)
 }
 \arguments{
-\item{url_address}{The url you wan't to start}
+\item{min_sale_date}{Sale date from.}
 
-\item{pause}{the function with rnorm(1, 1, 0.2) if TRUE, when webscrapping.}
+\item{max_sale_date}{Sale date to.}
+
+\item{type}{Type.}
+
+\item{postal_code}{Postal code.}
 }
 \description{
 The function takes the search results from the base url

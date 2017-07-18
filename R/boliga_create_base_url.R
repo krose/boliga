@@ -4,7 +4,7 @@
 #' 
 #' @param min_sale_date as.Date(). The minimum sale date.
 #' @param max_sale_date as.Date(). The maximum sale date.
-#' @param type type fritidshus, ... ... .. 
+#' @param type type "Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom" 
 #' @param post_no Post number.
 #' 
 #' @export
@@ -16,12 +16,12 @@
 #' boliga_create_base_url(min_sale_date = Sys.Date() - 100,
 #'                        max_sale_date = Sys.Date(),
 #'                        type = "Fritidshus",
-#'                        post_no = 4500)
+#'                        postal_code = 4500)
 #'                        
 boliga_create_base_url <- function(min_sale_date = NULL,
                                    max_sale_date = Sys.Date(),
                                    type = c("Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom"),
-                                   post_no = NULL){
+                                   postal_code = NULL){
   
   
   base_url <- "http://www.boliga.dk/salg/resultater?so=1"
@@ -64,10 +64,10 @@ boliga_create_base_url <- function(min_sale_date = NULL,
     stop("type cannot be null.")
   }
   
-  if(!is.null(post_no)){
-    post_no <- paste0("&iPostnr=", post_no)
+  if(!is.null(postal_code)){
+    postal_code <- paste0("&iPostnr=", postal_code)
     
-    base_url <- paste0(base_url, post_no)
+    base_url <- paste0(base_url, postal_code)
   } else {
     stop("post_no cannot be null.")
   }

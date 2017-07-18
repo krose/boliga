@@ -6,7 +6,7 @@
 \usage{
 boliga_create_base_url(min_sale_date = NULL, max_sale_date = Sys.Date(),
   type = c("Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus",
-  "Landejendom"), post_no = NULL)
+  "Landejendom"), postal_code = NULL)
 }
 \arguments{
 \item{min_sale_date}{as.Date(). The minimum sale date.}
@@ -27,6 +27,6 @@ library(boliga)
 boliga_create_base_url(min_sale_date = Sys.Date() - 100,
                        max_sale_date = Sys.Date(),
                        type = "Fritidshus",
-                       post_no = 4500)
+                       postal_code = 4500)
                        
 }
