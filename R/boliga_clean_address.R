@@ -4,7 +4,6 @@
 #' seperating the house number and postal code.
 #'
 #' @param bad_adress Character vector.
-#' @export
 boliga_clean_address <- function(bad_address){
 
   # extract the street address number and postal code

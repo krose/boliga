@@ -1,12 +1,13 @@
 Package: boliga
 Type: Package
 Title: Webscrape Boliga
-Version: 0.2.2
+Version: 0.2.3
 Date: 2015-08-01
 Author: Kenneth Rose
 Maintainer: Kenneth Rose <kennethrose82@gmail.com>
 Description: This package contains a few helper functions to webscrape boliga.
 License: MIT
+Encoding: UTF-8
 LazyData: TRUE
 Import: magrittr,
     rvest,

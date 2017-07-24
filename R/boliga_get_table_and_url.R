@@ -7,14 +7,22 @@
 #'
 #' @param url_address The url you wan't to start
 #' @param boliga_base_url The base url for the loop.
-#' @export
 boliga_get_table_and_url <- function(url_address, boliga_base_url){
 
   ## parse the url to get the hostname and path
   boliga_url <- httr::parse_url(url_address)
-
+  
+  boliga_page <- httr::GET(url = url_address, 
+                           httr::user_agent("https://github.com/krose/mkonline"))
+  
+  if(httr::status_code(boliga_page) != 200){
+    httr::stop_for_status(boliga_page)
+  }
+  
+  boliga_page <- httr::content(x = boliga_page, as = "text")
+  
   # Parse the url_address
-  boliga_page <- xml2::read_html(url_address)
+  boliga_page <- xml2::read_html(boliga_page)
 
   # 1. Take the boliga page
   # 2. find the #searchresult nodes

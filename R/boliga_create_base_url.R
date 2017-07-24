@@ -7,8 +7,6 @@
 #' @param type type "Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom" 
 #' @param post_no Post number.
 #' 
-#' @export
-#' 
 #' @examples 
 #' 
 #' library(boliga)
@@ -33,7 +31,7 @@ boliga_create_base_url <- function(min_sale_date = NULL,
     base_url <- paste0(base_url, sort_by)
   }
   
-  if(!is.null(min_sale_date) | class(max_sale_date)[1] == "Date"){
+  if(!is.null(min_sale_date) | class(min_sale_date)[1] == "Date"){
     min_sale_date <- paste0("&minsaledate=", min_sale_date)
     
     base_url <- paste0(base_url, min_sale_date)
@@ -50,18 +48,22 @@ boliga_create_base_url <- function(min_sale_date = NULL,
   }
   
   if(!is.null(type)){
-    type <- paste0("&type=", type)
     
     if(length(type) > 1){
-      stop("Type can only be of length one.")
+      stop("Type can only be of length one.", call. = FALSE)
     }
-    test_type <- !type %in% c("Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom")
+    test_type <- type %in% c("Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom")
     
+    if(!test_type){
+      stop("type has to be one of the following: ", 
+           paste(c("Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom"), collapse = ", "), 
+           call. = FALSE)
+    }
     
-    
+    type <- paste0("&type=", type)
     base_url <- paste0(base_url, type)
   } else {
-    stop("type cannot be null.")
+    stop("type cannot be null.", call. = FALSE)
   }
   
   if(!is.null(postal_code)){

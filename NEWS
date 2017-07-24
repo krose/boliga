@@ -3,8 +3,7 @@
 # CHANGES TO v0.1 #
 
  * Add boliga_clean_address to take care of the badly formatted street numbers and postal codes.
- * A better README with examples of ggmap plots
-
+ 
  * Initial commit
  
 # CHANGES TO v0.2.1
@@ -14,3 +13,15 @@
  * The call to rvest::html is replaced with xml2::read_html.
  
  * DESCRIPTION is changed so xml2 is added to Imports.
+
+# CHANGES TO v0.2.3
+
+ * I removed export of functions that the user doesn't need.
+ 
+ * I added a create create base url, to avoid having to visit Boliga.
+ 
+ * I use httr::GET and user_agent, https://github.com/krose/mkonline is added to the httr::GET function.
+ 
+ * I updated DESCRIPTION with Encoding: UTF-8 to avoid encoding issues on Windows.
+ 
+ * I updated the README to show the core functionality.

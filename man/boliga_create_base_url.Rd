@@ -13,7 +13,7 @@ boliga_create_base_url(min_sale_date = NULL, max_sale_date = Sys.Date(),
 
 \item{max_sale_date}{as.Date(). The maximum sale date.}
 
-\item{type}{type fritidshus, ... ... ..}
+\item{type}{type "Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom"}
 
 \item{post_no}{Post number.}
 }

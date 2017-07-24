@@ -1,69 +1,51 @@
 # Webscrape Boliga
 Kenneth Rose  
-1. aug. 2015  
+24. juli. 2017  
 
-This package has a few helper functions to webscrape the content of boliga.
+This package has a few helper functions to webscrape the content of [Boliga data for realiserede salgpriser](https://www.boliga.dk/salg/).
 
-It is rather simple to use. You only need to do the following to scrape the actual sales
-prices for an area that you define on the [boliga](www.boliga.dk) homepage. You only 
-need to do the following:
+This package will try to follow the [Ethical Scraper](https://medium.com/@jamesdensmore/ethics-in-web-scraping-b96b18136f01) guidelines.
 
-- Go to quick search page on [boliga.dk/salg](www.boliga.dk/salg)
-- Make an appropiate search
-- Copy the url into the function boliga_webscrape_sold.
-
-Clap your hands when the data is returned.
+It is rather simple to use. You only need to do the following to scrape the actual sales prices for an area that you define on the [boliga](https://www.boliga.dk) homepage. You only need to do the following:
 
 
 
 ```r
 library(boliga)
-library(ggplot2)
-library(ggmap)
 library(dplyr)
+library(ggplot2)
 
-# The url is from boliga.dk/salg -> 
-# Hurtigsøgning:boligtype(fritdishuse), hurigsøgning:postnummer(4500) and then press "søg"
-# Jeg har splittet url'en op i paste0 fordi at den er så lang.
+boliger <- boliga_webscrape_sold(min_sale_date = "2017-04-01", 
+                                 max_sale_date = "2017-06-30", 
+                                 type = "Fritidshus", 
+                                 postal_code = 4500)
 
-boliger <- boliga_webscrape_sold(url_address = paste0("http://www.boliga.dk/salg/resultater?so=1&",
-                                                      "sort=omregnings_dato-d&maxsaledate=today&",
-                                                      "type=Fritidshus&iPostnr=4500&",
-                                                      "gade=&minsaledate=2016"))
-
-# boliger <- webscrape_boliga_sold(url_address = "http://www.boliga.dk/salg/resultater?so=1&type=Fritidshus&kom=&fraPostnr=&tilPostnr=&gade=&min=&max=&byggetMin=&byggetMax=&minRooms=&maxRooms=&minSize=&maxSize=&minsaledate=2014&maxsaledate=today&kode=")
+glimpse(boliger)
 ```
 
-I just bought a summer house in Nykøbing Sj. so let's see how the distribution of prices are now
-compared to the price I payed for the house.
+```
+## Observations: 85
+## Variables: 11
+## $ vej         <chr> "Pilevangsvej 36", "Bakkevænget 8", "Strandvangen ...
+## $ rum         <int> 3, 5, 4, 4, 4, 3, 3, 4, 4, 6, 3, 4, 5, 3, 5, 4, 4,...
+## $ boligtype   <chr> "Sommerhus", "Sommerhus", "Sommerhus", "Sommerhus"...
+## $ kvm         <int> 35, 82, 52, 73, 76, 57, 66, 87, 76, 75, 65, 81, 11...
+## $ bygget      <int> 1974, 1963, 1942, 1973, 1972, 1968, 2003, 1968, 19...
+## $ udbudsrabat <dbl> 0.00, NA, NA, NA, -0.04, -0.01, -0.03, -0.09, -0.0...
+## $ pris        <dbl> 1995000, 537075, 272000, 485000, 890000, 736000, 1...
+## $ post_by     <chr> "4500 Nykøbing Sj", "4500 Nykøbing Sj", "4500 Nykø...
+## $ pris_kvm    <dbl> 57000, 6549, 5230, 6643, 11710, 12912, 17575, 2396...
+## $ dato        <date> 2017-06-29, 2017-06-24, 2017-06-23, 2017-06-22, 2...
+## $ type        <chr> "Alm. Salg", "Alm. Salg", "Andet", "Alm. Salg", "A...
+```
+
+I just bought a summer house in Nykøbing Sj. so let's see how the distribution of prices is.
 
 
 ```r
-hist(boliger$pris_kvm, 
-     xlab = "kvm pris", 
-     ylab = "antal",
-     breaks = 50, 
-     main = "Histogram af kvm priser")
-abline(v = 535000 / 126)
-abline(v = 735000 / 126)
+ggplot(boliger, aes(pris_kvm)) +
+  geom_histogram()
 ```
 
-![](README_files/figure-html/kvmplot-1.png)\
-
-Phew... That's not to bad!
-
-
-But what if my area is clusted with low square meter prices? Let's use the ggmap package to the lat/lon from the address.
-
-
-```r
-# Second, clean the address
-boliger$adresse <- paste(boliger$vej, boliger$post_by)
-boliger$adresse <- paste0(boliger$adresse, ", Denmark")
-
-# Get the lon and lat from google
-# THIS WILL TAKE A WHILE
-latlon <- geocode(location = boliger$adresse)
-boliger <- cbind(boliger, latlon)
-```
+![](README_files/figure-html/kvmplot-1.png)<!-- -->
 
