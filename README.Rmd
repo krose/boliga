@@ -7,7 +7,7 @@ output:
 
 ## What does it do?
 
-This package has a few helper functions to webscrape the content of [home sales prices from Boliga](https://www.boliga.dk/salg/).
+This package has a few helper functions to webscrape the content of [home sales prices from Boliga](http://www.boliga.dk/salg/).
 
 This package will try to follow the [Ethical Scraper](https://medium.com/@jamesdensmore/ethics-in-web-scraping-b96b18136f01) guidelines.
 
