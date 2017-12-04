@@ -27,4 +27,7 @@
  * I updated the README to show the core functionality.
 
  * Link en Rmd file fixed.
- 
+
+# CHANGES TO v0.2.4
+
+ * Fixed typos in param checks.

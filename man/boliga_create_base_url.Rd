@@ -5,7 +5,7 @@
 \title{Function to create the base url for webscraping boliga.}
 \usage{
 boliga_create_base_url(min_sale_date = NULL, max_sale_date = Sys.Date(),
-  type = c("Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus",
+  type = c("Alle", "Villa", "Rækkehus", "Ejerlejlighed", "Fritidshus",
   "Landejendom"), postal_code = NULL)
 }
 \arguments{

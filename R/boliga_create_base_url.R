@@ -18,7 +18,7 @@
 #'                        
 boliga_create_base_url <- function(min_sale_date = NULL,
                                    max_sale_date = Sys.Date(),
-                                   type = c("Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom"),
+                                   type = c("Alle", "Villa", "Rækkehus", "Ejerlejlighed", "Fritidshus", "Landejendom"),
                                    postal_code = NULL){
   
   
