@@ -26,7 +26,7 @@ if(!require(boliga)){
 ```
 
 
-It is rather simple to use. You only need to do the following to scrape the actual sales prices for an area that you define on the [boliga](https://www.boliga.dk) homepage. You only need to do the following:
+It is rather simple to use. You only need to do the following to scrape the actual sales prices for an area from [Boliga's](https://www.boliga.dk/salg/) homepage:
 
 
 ```{r eksempel, message = FALSE, warning = FALSE}
@@ -44,11 +44,11 @@ glimpse(boliger)
 
 ```
 
-I just bought a summer house in Nykøbing Sj. so let's see how the distribution of prices is.
+I just bought a summer house in Nykøbing Sj. so let's see how the distribution of prices is for the 2nd quarter of 2017.
 
 ```{r kvmplot, message = FALSE, warning = FALSE}
 
-ggplot(boliger, aes(pris_kvm)) +
+ggplot(boliger %>% filter(pris_kvm < 50000), aes(pris_kvm)) +
   geom_histogram()
 
 ```
