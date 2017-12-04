@@ -52,11 +52,11 @@ boliga_create_base_url <- function(min_sale_date = NULL,
     if(length(type) > 1){
       stop("Type can only be of length one.", call. = FALSE)
     }
-    test_type <- type %in% c("Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom")
+    test_type <- type %in% c("Alle", "Villa", "Rækkehus", "Ejerlejlighed", "Fritidshus", "Landejendom")
     
     if(!test_type){
       stop("type has to be one of the following: ", 
-           paste(c("Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom"), collapse = ", "), 
+           paste(c("Alle", "Villa", "Rækkehus", "Ejerlejlighed", "Fritidshus", "Landejendom"), collapse = ", "), 
            call. = FALSE)
     }
     
