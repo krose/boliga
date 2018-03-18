@@ -12,72 +12,55 @@
 #' @importFrom magrittr %>%
 boliga_webscrape_sold <- function(min_sale_date, max_sale_date, type, postal_code){
 
-  url_address <- boliga_create_base_url(min_sale_date = min_sale_date, 
+  base_url <- boliga_create_base_url(min_sale_date = min_sale_date, 
                                         max_sale_date = max_sale_date, 
                                         type = type, 
                                         postal_code = postal_code)
   
-  if(!is.null(url_address)){
-    # Parse the base url to get hostname and path
-    base_url <- httr::parse_url(url_address)
+  boliga_base <- httr::GET(url = base_url)
+  boliga_base_content <- httr::content(boliga_base, as = "text", encoding = "UTF-8")
+  
+  boliga_base_html <- xml2::read_html(boliga_base_content)
+  
+  # Get the number of results
+  house_count <- 
+    boliga_base_html %>% 
+    rvest::html_node(".pb-2 h4") %>% 
+    rvest::html_text() %>%
+    stringr::str_replace_all(., "\\.", "") %>%
+    stringr::str_extract(., "[0-9]{0,9}") %>% 
+    as.integer()
+  
+  # There are 40 results per page
+  if(is.na(house_count)){
     
-    bol_base <- paste0("http://", base_url$hostname,"/", base_url$path)
+    warning(paste0("There are no results from your query.", "This url was create from your request: ", base_url))
+    return(NULL)
+  }
+  page_count <- house_count / 40
+  
+  if(as.integer(page_count) < page_count){
+    page_count <- as.integer(page_count) + 1
   }
   
-
-  # Get table and url
-  table_and_url <- boliga_get_table_and_url(url_address = url_address, 
-                                            boliga_base_url = bol_base)
-
-  # Get the table from the page
-  boliga_table <- table_and_url[[1]]
-
-  # Get the next url
-  next_url <- table_and_url[[2]]
-
-  # While the next_url isn't returning NA
-  # continue and parse the next page
-  while(!is.na(next_url)){
-
-    # build the url of the "next" page
-    next_boliga_url <- paste0("http://", base_url$hostname,"/", base_url$path, next_url)
-
-    # Get the next urls table and the next_urls next_url
-    temp_table_and_url <- boliga_get_table_and_url(url_address = next_boliga_url, 
-                                                   boliga_base_url = bol_base)
-
-    # Row bind the boliga_table and the temp_table
-    boliga_table <- rbind(boliga_table, temp_table_and_url[[1]])
-
-    # def next url
-    next_url <- temp_table_and_url[[2]]
-
+  # loop over the pages and save the
+  # results to the results_list.
+  pb <- progress::progress_bar$new(total = page_count)
+  result_list <- vector("list", page_count)
+  for(page in 1:page_count){
+    
+    url_address <- glue::glue('{base_url}', '&p={page}')
+    
+    result_list[[page]] <- boliga_get_table(url_address)
+    
     Sys.sleep(time = rgamma(n = 1, shape = 3, scale = 0.3))
+    pb$tick()
   }
 
-  # rename variables
-  names(boliga_table) <- c("vej", "koebesum", "dato_type", "kvm_pris", "rum", "boligtype", "kvm", "bygget", "udbudsrabat", "aktuel_pris")
-
-  # parse the pris and pris_kvm to numeric
-  # parse the Dato to POSIXct
-  boliga_table$pris <- stringr::str_replace_all(boliga_table$koebesum, "[[:punct:]]", "") %>% as.numeric()
-
-  # Find fire tal efterfulgt af et mellemrum og behold resten af linjen efter mellemrummet.
-  boliga_table$post_by <- stringr::str_extract(string = boliga_table$vej, pattern = '((([0-9]{4})+[" "])+(.*))')
-
-  # Fjern post_by fra vej.
-  boliga_table$vej <- stringr::str_replace(string = boliga_table$vej, pattern = boliga_table$post_by, replacement = "")
-  boliga_table$pris_kvm <- stringr::str_replace_all(boliga_table$kvm_pris, "[[:punct:]]", "") %>% as.numeric()
-  boliga_table$dato <- lubridate::dmy(stringr::str_sub(boliga_table$dato_type, start = 1L, end = 10))
-  boliga_table$bygget <- as.integer(boliga_table$bygget)
-  boliga_table$kvm <- as.integer(boliga_table$kvm)
-  boliga_table$type <- stringr::str_replace(boliga_table$dato_type, "[0-9]{2}+[[:punct:]]{1}+[0-9]{2}+[-]{1}+[0-9]{4}", "")
-  boliga_table$udbudsrabat <- stringr::str_replace(boliga_table$udbudsrabat, " %", "") %>% as.numeric()
-  boliga_table$udbudsrabat <- boliga_table$udbudsrabat / 100
-
-  boliga_table <-
-    boliga_table %>%
-    dplyr::select(-koebesum, -dato_type, -aktuel_pris, -kvm_pris)
-
-  return(boliga_table)
+  boliga_table <- 
+    result_list %>%
+    dplyr::bind_rows()
+  
+  boliga_table
 }
+

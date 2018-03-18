@@ -1,9 +1,15 @@
 
 
-bol_extract_table <- function(bol_html){
+bol_extract_table <- function(boliga_content){
   
+  # parse the text to html
+  # find the #searchresult nodes
+  # get the table rows and content
+  # I used selectorGadget to find the
+  # node "#searchresult"
   bol_table <- 
-    bol_html %>%
+    boliga_content %>%
+    xml2::read_html() %>%
     rvest::html_nodes("#searchresult") %>%
     rvest::html_nodes("tr") %>% 
     purrr::map(~rvest::html_nodes(.x, "td"))

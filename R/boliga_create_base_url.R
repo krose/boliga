@@ -60,7 +60,12 @@ boliga_create_base_url <- function(min_sale_date = NULL,
            call. = FALSE)
     }
     
-    type <- paste0("&type=", type)
+    if(type == "Alle"){
+      type <- ""
+    } else{
+      type <- paste0("&type=", type)
+    }
+    
     base_url <- paste0(base_url, type)
   } else {
     stop("type cannot be null.", call. = FALSE)
