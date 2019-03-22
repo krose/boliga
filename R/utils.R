@@ -81,5 +81,15 @@ bol_extract_table <- function(boliga_content){
     stringr::str_replace(., " %", "") %>%
     as.double()
   
-  dplyr::bind_cols(tibble::tibble(adresse, pris, pris_kvm, vaerelser, type, kvm, bygget_aar, udbudsrabat), dato_type_tibble)
+  bolig_link <- 
+    bol_table %>% 
+    purrr::map(~.x %>% .[1] %>% rvest::html_node("a")) %>% 
+    purrr::map(., ~rvest::html_attrs(.)) %>% 
+    unlist() %>% 
+    unname()
+  
+  res_df <- dplyr::bind_cols(tibble::tibble(adresse, pris, pris_kvm, vaerelser, type, kvm, bygget_aar, udbudsrabat), dato_type_tibble)
+  res_df$bolig_link <- bolig_link
+  
+  res_df
 }
