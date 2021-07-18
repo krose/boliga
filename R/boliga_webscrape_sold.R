@@ -25,19 +25,18 @@ boliga_webscrape_sold <- function(min_sale_date, max_sale_date, type, postal_cod
   # Get the number of results
   house_count <- 
     boliga_base_html %>% 
-    rvest::html_node(".pb-2 h4") %>% 
+    rvest::html_node(".listings-found-text") %>% 
     rvest::html_text() %>%
-    stringr::str_replace_all(., "\\.", "") %>%
-    stringr::str_extract(., "[0-9]{0,9}") %>% 
+    readr::parse_number() %>% 
     as.integer()
   
-  # There are 40 results per page
+  # There are 50 results per page
   if(is.na(house_count)){
     
     warning(paste0("There are no results from your query.", "This url was create from your request: ", base_url))
     return(NULL)
   }
-  page_count <- house_count / 40
+  page_count <- house_count / 50
   
   if(as.integer(page_count) < page_count){
     page_count <- as.integer(page_count) + 1

@@ -10,7 +10,7 @@ bol_extract_table <- function(boliga_content){
   bol_table <- 
     boliga_content %>%
     xml2::read_html() %>%
-    rvest::html_nodes("#searchresult") %>%
+    rvest::html_nodes(".mb-3") %>%
     rvest::html_nodes("tr") %>% 
     purrr::map(~rvest::html_nodes(.x, "td"))
   
