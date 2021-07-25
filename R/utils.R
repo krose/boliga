@@ -2,7 +2,6 @@
 
 bol_extract_table <- function(boliga_content){
   
-  browser()
   # parse the text to html
   # find the #searchresult nodes
   # get the table rows and content
@@ -55,38 +54,28 @@ bol_extract_table <- function(boliga_content){
     do.call(c, .) %>%
     as.integer()
   
-  # type <- 
-  #   bol_table %>%
-  #   purrr::map(~.x %>% .[6] %>% rvest::html_node("h5") %>% rvest::html_text()) %>%
-  #   do.call(c, .)
-  # 
-  # kvm <- 
-  #   bol_table %>%
-  #   purrr::map(~.x %>% .[7] %>% rvest::html_node("h5") %>% rvest::html_text() %>% stringr::str_replace_all(., "\\.", "")) %>%
-  #   do.call(c, .) %>%
-  #   as.integer()
-  # 
-  # bygget_aar <- 
-  #   bol_table %>%
-  #   purrr::map(~.x %>% .[8] %>% rvest::html_node("h5") %>% rvest::html_text()) %>%
-  #   do.call(c, .)
-  # 
-  # udbudsrabat <- 
-  #   bol_table %>%
-  #   purrr::map(~.x %>% .[9] %>% rvest::html_node("h5") %>% rvest::html_text()) %>%
-  #   do.call(c, .) %>%
-  #   stringr::str_replace(., " %", "") %>%
-  #   as.double()
+  m2 <- 
+    bol_table %>%
+    purrr::map(~.x %>% .[7] %>% rvest::html_nodes("span") %>% .[2] %>% rvest::html_text()) %>%
+    do.call(c, .)
+    
+  byggear <- 
+    bol_table %>%
+    purrr::map(~.x %>% .[8] %>% rvest::html_nodes("span") %>% .[2] %>% rvest::html_text()) %>%
+    do.call(c, .)  %>%
+    as.integer()
   
   bolig_link <- 
     bol_table %>% 
     purrr::map(~.x %>% .[1] %>% rvest::html_node("a")) %>% 
-    purrr::map(., ~rvest::html_attrs(.)) %>% 
+    purrr::map(., ~rvest::html_attrs(.)) %>%
     unlist() %>% 
     unname()
   
-  res_df <- dplyr::bind_cols(tibble::tibble(adresse, pris, pris_kvm, vaerelser, type, kvm, bygget_aar, udbudsrabat), dato_type_tibble)
-  res_df$bolig_link <- bolig_link
+  bolig_link_selected <- bolig_link[seq(4, length(bolig_link), 4)]
+  
+  res_df <- dplyr::bind_cols(tibble::tibble(adresse, pris, salgsdato, boligtype, pris_kvm, vaerelser, m2, byggear))
+  res_df$bolig_link <- bolig_link_selected
   
   res_df
 }
