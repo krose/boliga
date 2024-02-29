@@ -27,8 +27,8 @@ boliga_webscrape_sold <- function(min_sale_date, max_sale_date, type, postal_cod
     boliga_base_html %>% 
     rvest::html_node(".listings-found-text") %>% 
     rvest::html_text() %>%
-    stringr::str_replace_all("[,.]") %>%
-    readr::parse_number() %>% 
+    #stringr::str_replace_all("[,.]") %>%
+    readr::parse_number(locale = readr::locale(grouping_mark = ".")) %>% 
     as.integer()
   
   # There are 50 results per page
