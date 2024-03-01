@@ -10,18 +10,18 @@ bol_extract_table <- function(boliga_content){
   bol_table <-
     boliga_content %>%
     xml2::read_html() %>%
-    rvest::html_nodes(".mb-3") %>%
-    rvest::html_nodes("tr") %>%
-    purrr::map(~rvest::html_nodes(.x, "td"))
+    rvest::html_nodes("tbody") %>% 
+    rvest::html_nodes("tr") %>% 
+    purrr::map(~rvest::html_nodes(.x, "td")) 
 
   adresse <-
     bol_table %>%
-    purrr::map(~.x %>% .[1] %>% rvest::html_node("a")) %>%
+    purrr::map(~.x %>% .[1] %>% rvest::html_node("a")) %>% 
     purrr::map(~as.character(.x)) %>%
-    purrr::map(~stringr::str_replace_all(.x, "<br>", ", ")) %>%
+    purrr::map(~stringr::str_replace_all(.x, "<br>", ", ")) %>% 
     do.call(c, .) %>%
     paste(., collapse = "\n") %>%
-    xml2::read_html(.) %>%
+    xml2::read_html(.) %>%  
     rvest::html_nodes("a") %>%
     rvest::html_text()
 
@@ -39,9 +39,14 @@ bol_extract_table <- function(boliga_content){
     do.call(c, .) %>%
     as.Date(dato, format = "%d-%m-%Y")
 
-  boligtype <-
+  salgstype <-
     bol_table %>%
     purrr::map(~.x %>% .[3] %>% rvest::html_nodes("span") %>% .[2] %>% rvest::html_text() %>% stringr::str_replace_all(., "\\.", "")) %>%
+    do.call(c, .)
+
+  boligtype <-
+    bol_table %>%
+    purrr::map(~.x %>% .[1] %>% rvest::html_node("p") %>% .[1] %>% rvest::html_text() %>% stringr::str_replace_all(., "\\.", "") %>% stringr::str_trim()) %>%
     do.call(c, .)
 
   pris_kvm <-
@@ -81,7 +86,7 @@ bol_extract_table <- function(boliga_content){
 
   bolig_link_selected <- bolig_link[seq(4, length(bolig_link), 4)]
 
-  res_df <- dplyr::bind_cols(tibble::tibble(adresse, pris, salgsdato, boligtype, pris_kvm, vaerelser, m2, byggear))
+  res_df <- dplyr::bind_cols(tibble::tibble(adresse, pris, salgsdato, salgstype, boligtype, pris_kvm, vaerelser, m2, byggear))
   res_df$bolig_link <- bolig_link_selected
 
   res_df

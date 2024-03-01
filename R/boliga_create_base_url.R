@@ -2,8 +2,8 @@
 
 #' Function to create the base url for webscraping boliga.
 #' 
-#' @param min_sale_date as.Date(). The minimum sale date.
-#' @param max_sale_date as.Date(). The maximum sale date.
+#' @param min_sale_year as.numeric(). The minimum sale date.
+#' @param max_sale_year as.numeric(). The maximum sale date.
 #' @param type type "Alle", "Villa", "Rækkehus", "Ejerleglighed", "Fritidshus", "Landejendom" 
 #' @param post_no Post number.
 #' 
@@ -11,13 +11,13 @@
 #' 
 #' library(boliga)
 #' 
-#' boliga_create_base_url(min_sale_date = Sys.Date() - 100,
-#'                        max_sale_date = Sys.Date(),
+#' boliga_create_base_url(min_sale_year = Sys.Date() - 100,
+#'                        max_sale_year = Sys.Date(),
 #'                        type = "Fritidshus",
 #'                        postal_code = 4500)
 #'                        
-boliga_create_base_url <- function(min_sale_date = NULL,
-                                   max_sale_date = Sys.Date(),
+boliga_create_base_url <- function(min_sale_year = NULL,
+                                   max_sale_year = as.numeric(format(Sys.Date(), "%Y")),
                                    type = c("Alle", "Villa", "Rækkehus", "Ejerlejlighed", "Fritidshus", "Landejendom"),
                                    postal_code = NULL){
   
@@ -30,21 +30,21 @@ boliga_create_base_url <- function(min_sale_date = NULL,
     
     base_url <- paste0(base_url, sort_by)
   }
-  
-  if(!is.null(min_sale_date) | class(min_sale_date)[1] == "Date"){
-    min_sale_date <- paste0("&minsaledate=", min_sale_date)
+
+  if(!is.null(min_sale_year) | class(min_sale_year)[1] == "numeric"){
+    min_sale_year <- paste0("&salesDateMin=", min_sale_year)
     
-    base_url <- paste0(base_url, min_sale_date)
+    base_url <- paste0(base_url, min_sale_year)
   } else {
-    stop("min_sale_date cannot be null and needs to be of class Date.")
+    stop("min_sale_year cannot be null and needs to be of class numeric.")
   }
   
-  if(!is.null(max_sale_date) | class(max_sale_date)[1] == "Date"){
-    max_sale_date <- paste0("&maxsaledate=", max_sale_date)
+  if(!is.null(max_sale_year) | class(max_sale_year)[1] == "numeric"){
+    max_sale_year <- paste0("&salesDateMax=", max_sale_year)
     
-    base_url <- paste0(base_url, max_sale_date)
+    base_url <- paste0(base_url, max_sale_year)
   } else {
-    stop("max_sale_date cannot be null and needs to be of class Date.")
+    stop("max_sale_year cannot be null and needs to be of class numeric.")
   }
   
   if(!is.null(type)){
