@@ -17,7 +17,7 @@
 #'                        postal_code = 4500)
 #'                        
 boliga_create_base_url <- function(min_sale_year = NULL,
-                                   max_sale_year = format(Sys.Date(), "%Y"),
+                                   max_sale_year = as.numeric(format(Sys.Date(), "%Y")),
                                    type = c("Alle", "Villa", "Rækkehus", "Ejerlejlighed", "Fritidshus", "Landejendom"),
                                    postal_code = NULL){
   
