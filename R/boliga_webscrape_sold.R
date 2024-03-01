@@ -4,16 +4,16 @@
 #' The function takes the search results from the base url
 #' and iterates until there's no "next" page.
 #'
-#' @param min_sale_date Sale date from.
-#' @param max_sale_date Sale date to.
+#' @param min_sale_year Sale year from as numeric.
+#' @param max_sale_year Sale year to as numeric.
 #' @param type Type.
 #' @param postal_code Postal code.
 #' @export
 #' @importFrom magrittr %>%
-boliga_webscrape_sold <- function(min_sale_date, max_sale_date, type, postal_code){
+boliga_webscrape_sold <- function(min_sale_year, max_sale_year, type, postal_code){
 
-  base_url <- boliga_create_base_url(min_sale_date = min_sale_date, 
-                                        max_sale_date = max_sale_date, 
+  base_url <- boliga_create_base_url(min_sale_year = min_sale_year, 
+                                        max_sale_year = max_sale_year, 
                                         type = type, 
                                         postal_code = postal_code)
   
@@ -27,7 +27,8 @@ boliga_webscrape_sold <- function(min_sale_date, max_sale_date, type, postal_cod
     boliga_base_html %>% 
     rvest::html_node(".listings-found-text") %>% 
     rvest::html_text() %>%
-    readr::parse_number(locale = readr::locale(grouping_mark = ".")) %>% 
+    stringr::str_replace_all(., "\\.", "") %>%
+    readr::parse_number() %>% 
     as.integer()
   
   # There are 50 results per page
@@ -48,8 +49,9 @@ boliga_webscrape_sold <- function(min_sale_date, max_sale_date, type, postal_cod
   result_list <- vector("list", page_count)
   for(page in 1:page_count){
     
-    url_address <- glue::glue('{base_url}', '&p={page}')
-    
+    url_address <- glue::glue('{base_url}', '&page={page}')
+    #print(url_address)
+  
     result_list[[page]] <- boliga_get_table(url_address)
     
     Sys.sleep(time = rgamma(n = 1, shape = 3, scale = 0.3))
